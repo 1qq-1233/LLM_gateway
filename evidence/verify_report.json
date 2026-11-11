@@ -1,0 +1,318 @@
+{
+  "source": "scripts/verify.py",
+  "command": "python scripts/verify.py --mode sim --base-url http://127.0.0.1:8123 --sim-port 8102 --report evidence/verify_report.json",
+  "mode": "sim",
+  "gateway": "http://127.0.0.1:8123",
+  "ts": "2026-11-11 10:41:35",
+  "passed": 17,
+  "total": 17,
+  "results": [
+    {
+      "id": "00",
+      "name": "网关健康检查",
+      "passed": true,
+      "evidence": {
+        "status": "ok",
+        "uptime_s": 2.5,
+        "models": {
+          "deepseek-v4-pro": "openai_responses",
+          "deepseek-v4-flash": "anthropic_messages"
+        }
+      },
+      "hint": ""
+    },
+    {
+      "id": "01",
+      "name": "双协议模型注册",
+      "passed": true,
+      "evidence": {
+        "deepseek-v4-pro": "openai_responses",
+        "deepseek-v4-flash": "anthropic_messages"
+      },
+      "hint": "至少配置两个不同协议的模型"
+    },
+    {
+      "id": "02",
+      "name": "OpenAI系非流式",
+      "passed": true,
+      "evidence": {
+        "protocol": "openai_responses",
+        "chars": 25,
+        "usage": {
+          "input_tokens": 84,
+          "output_tokens": 89,
+          "total_tokens": 173,
+          "cached_tokens": 20,
+          "reasoning_tokens": 15,
+          "tool_tokens": 0
+        },
+        "latency_ms": 54.07
+      },
+      "hint": ""
+    },
+    {
+      "id": "03",
+      "name": "Anthropic系非流式",
+      "passed": true,
+      "evidence": {
+        "protocol": "anthropic_messages",
+        "chars": 25,
+        "usage": {
+          "input_tokens": 90,
+          "output_tokens": 48,
+          "total_tokens": 138,
+          "cached_tokens": 3,
+          "reasoning_tokens": 0,
+          "tool_tokens": 0
+        },
+        "latency_ms": 3.1
+      },
+      "hint": ""
+    },
+    {
+      "id": "04",
+      "name": "OpenAI系流式SSE",
+      "passed": true,
+      "evidence": {
+        "events": [
+          "response.start",
+          "response.delta",
+          "response.delta",
+          "...",
+          "response.delta",
+          "response.stop"
+        ],
+        "delta_chunks": 6,
+        "first_token_ms": 62.96,
+        "usage": {
+          "input_tokens": 85,
+          "output_tokens": 52,
+          "total_tokens": 137,
+          "cached_tokens": 7,
+          "reasoning_tokens": 20,
+          "tool_tokens": 0
+        },
+        "text_sample": "【仿真回复】已收到你的输入：请流式输出：统一网关的三个能力"
+      },
+      "hint": ""
+    },
+    {
+      "id": "05",
+      "name": "Anthropic系流式SSE",
+      "passed": true,
+      "evidence": {
+        "events": [
+          "response.start",
+          "response.delta",
+          "response.delta",
+          "...",
+          "response.delta",
+          "response.stop"
+        ],
+        "delta_chunks": 6,
+        "first_token_ms": 54.45,
+        "usage": {
+          "input_tokens": 63,
+          "output_tokens": 67,
+          "total_tokens": 130,
+          "cached_tokens": 6,
+          "reasoning_tokens": 0,
+          "tool_tokens": 0
+        },
+        "text_sample": "【仿真回复】已收到你的输入：请流式输出：统一网关的三个能力"
+      },
+      "hint": ""
+    },
+    {
+      "id": "06",
+      "name": "OpenAI系结构化输出",
+      "passed": true,
+      "evidence": {
+        "protocol": "openai_responses",
+        "structured": {
+          "name": "示例文本",
+          "age": 1,
+          "skills": [
+            "示例文本"
+          ],
+          "summary": "示例文本"
+        },
+        "raw_is_json": true
+      },
+      "hint": ""
+    },
+    {
+      "id": "07",
+      "name": "Anthropic系结构化输出",
+      "passed": true,
+      "evidence": {
+        "protocol": "anthropic_messages",
+        "structured": {
+          "name": "示例文本",
+          "age": 1,
+          "skills": [
+            "示例文本"
+          ],
+          "summary": "示例文本"
+        },
+        "raw_is_json": true
+      },
+      "hint": ""
+    },
+    {
+      "id": "08",
+      "name": "模板创建与版本迭代",
+      "passed": true,
+      "evidence": {
+        "latest": 2,
+        "versions": [
+          1,
+          2
+        ],
+        "v2_variables": [
+          "question",
+          "tone"
+        ]
+      },
+      "hint": ""
+    },
+    {
+      "id": "09",
+      "name": "版本引用与变量替换",
+      "passed": true,
+      "evidence": {
+        "v1": "V1回答：什么是限流？",
+        "v2": "V2回答：什么是限流？（语气：幽默）",
+        "v1_version": 1,
+        "v2_version": 2
+      },
+      "hint": ""
+    },
+    {
+      "id": "10",
+      "name": "对话中引用模板版本",
+      "passed": true,
+      "evidence": {
+        "template": {
+          "name": "verify_demo",
+          "version": 2,
+          "rendered_chars": 24
+        },
+        "output_head": "【仿真回复】已收到你的输入：V2回答：网关为什么要做统一抽象？（语气：专业）"
+      },
+      "hint": ""
+    },
+    {
+      "id": "11",
+      "name": "错误码统一封装",
+      "passed": true,
+      "evidence": {
+        "http": 400,
+        "code": "template_render_error",
+        "message": "缺少模板变量：['tone']"
+      },
+      "hint": ""
+    },
+    {
+      "id": "12",
+      "name": "Token与延迟可观测",
+      "passed": true,
+      "evidence": {
+        "tokens_by_category": {
+          "input_tokens": 622,
+          "output_tokens": 436,
+          "total_tokens": 1058,
+          "cached_tokens": 65,
+          "reasoning_tokens": 65
+        },
+        "deepseek-v4-pro.first_token_ms": {
+          "samples": 1,
+          "avg": 62.96,
+          "p50": 62.96,
+          "p95": 62.96,
+          "min": 62.96,
+          "max": 62.96
+        },
+        "deepseek-v4-pro.latency_total_ms": {
+          "avg": 76.37,
+          "p50": 5.67,
+          "p95": 319.02,
+          "p99": 319.02,
+          "max": 319.02
+        },
+        "calls_total": 8
+      },
+      "hint": ""
+    },
+    {
+      "id": "13a",
+      "name": "指数退避重试后成功",
+      "passed": true,
+      "evidence": {
+        "attempts": 3,
+        "http": 200,
+        "output_head": "【仿真回复】已收到你的输入：重试测试"
+      },
+      "hint": ""
+    },
+    {
+      "id": "13b",
+      "name": "重试耗尽后统一报错",
+      "passed": true,
+      "evidence": {
+        "http": 502,
+        "code": "upstream_error",
+        "attempts": 3
+      },
+      "hint": ""
+    },
+    {
+      "id": "14",
+      "name": "模型级限流返回429",
+      "passed": true,
+      "evidence": {
+        "status_codes": [
+          200,
+          200,
+          429,
+          429
+        ],
+        "rate_limited_total": 2,
+        "bucket": {
+          "capacity": 2,
+          "rate_per_min": 6.0,
+          "available_tokens": 0.0
+        }
+      },
+      "hint": ""
+    },
+    {
+      "id": "15",
+      "name": "未知模型统一404",
+      "passed": true,
+      "evidence": {
+        "http": 404,
+        "code": "model_not_found"
+      },
+      "hint": ""
+    }
+  ],
+  "redaction": {
+    "applied": true,
+    "method": "写盘前对报告全文递归正则清洗",
+    "rules": [
+      "OpenAI / Anthropic 形态的 API Key",
+      "Bearer <redacted:token> 值",
+      "x-api-key <redacted> api_key <redacted>",
+      "URL 中的 user:pass@ 凭据"
+    ],
+    "never_logged": [
+      "提示词原文",
+      "模型回复全文（仅保留前 30 字样本）",
+      "上游请求头与 Authorization 值",
+      ".env 内容"
+    ],
+    "upstream_mode": "sim",
+    "note": "sim 模式使用本地协议仿真上游，不含任何真实凭据；real 模式需自行配置 .env，报告同样不含 Key。"
+  }
+}

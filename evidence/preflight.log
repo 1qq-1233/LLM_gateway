@@ -1,0 +1,71 @@
+==============================================================
+ LLM 统一网关 · 干净环境复现 (preflight)
+ 时间      : 2026-11-11 10:41:21 CST
+ 源仓库    : /data/workspace/llm-gateway
+ 临时目录  : /tmp/llm-gateway-preflight.EmedZI
+ Python    : Python 3.10.12
+ 网关端口  : 8123 / 8124   仿真上游端口: 8102
+==============================================================
+
+--- [1/6] 环境自检：提交文件树 + 端口占用（确认远端包含实际源码） ---
+仓库根目录：/data/workspace/llm-gateway
+必需文件：27/27
+app/ 下 Python 源码：16 个
+
+[PASS] 文件树完整，远端包含实际源码。
+端口 8123 / 8124 空闲，不会发生旧实例假 PASS
+
+--- [2/6] 构造干净环境（仅拷贝应提交文件，剔除缓存/.env/运行时产物） ---
+干净目录文件数：27
+根目录内容：README.md app evidence prompts requirements.txt scripts 
+干净目录自检: required 27/27, app/*.py = 16
+
+--- [3/6] 复跑 README 安装命令：pip install -r requirements.txt ---
+WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv
+依赖就绪: fastapi=0.162.4 httpx=0.28.1
+
+--- [4/6] 复跑 README 启动入口 A：bash scripts/run.sh ---
+healthz -> {"status":"ok","uptime_s":0.3,"models":{"deepseek-v4-pro":"openai_responses","deepseek-v4-flash":"anthropic_messages"}}
+
+--- [4/6] 复跑 README 启动入口 B：uvicorn app.main:app ---
+healthz -> {"status":"ok","uptime_s":0.4,"models":{"deepseek-v4-pro":"openai_responses","deepseek-v4-flash":"anthropic_messages"}}
+两种启动入口均通过（入口路径与仓库布局一致）
+
+--- [5/6] 运行验收脚本：python scripts/verify.py --mode sim ---
+
+=== LLM 统一网关验收 | 模式=sim | 网关=http://127.0.0.1:8123 ===
+
+[PASS] 00 网关健康检查                       {"status": "ok", "uptime_s": 2.5, "models": {"deepseek-v4-pro": "openai_responses", "deepseek-v4-flash": "anthropic_messages"}}
+[PASS] 01 双协议模型注册                      {"deepseek-v4-pro": "openai_responses", "deepseek-v4-flash": "anthropic_messages"}
+[PASS] 02 OpenAI系非流式                   {"protocol": "openai_responses", "chars": 25, "usage": {"input_tokens": 84, "output_tokens": 89, "total_tokens": 173, "cached_tokens": 20, "reasoning_tokens": 1
+[PASS] 03 Anthropic系非流式                {"protocol": "anthropic_messages", "chars": 25, "usage": {"input_tokens": 90, "output_tokens": 48, "total_tokens": 138, "cached_tokens": 3, "reasoning_tokens": 
+[PASS] 04 OpenAI系流式SSE                 {"events": ["response.start", "response.delta", "response.delta", "...", "response.delta", "response.stop"], "delta_chunks": 6, "first_token_ms": 62.96, "usage"
+[PASS] 05 Anthropic系流式SSE              {"events": ["response.start", "response.delta", "response.delta", "...", "response.delta", "response.stop"], "delta_chunks": 6, "first_token_ms": 54.45, "usage"
+[PASS] 06 OpenAI系结构化输出                 {"protocol": "openai_responses", "structured": {"name": "示例文本", "age": 1, "skills": ["示例文本"], "summary": "示例文本"}, "raw_is_json": true}
+[PASS] 07 Anthropic系结构化输出              {"protocol": "anthropic_messages", "structured": {"name": "示例文本", "age": 1, "skills": ["示例文本"], "summary": "示例文本"}, "raw_is_json": true}
+[PASS] 08 模板创建与版本迭代                    {"latest": 2, "versions": [1, 2], "v2_variables": ["question", "tone"]}
+[PASS] 09 版本引用与变量替换                    {"v1": "V1回答：什么是限流？", "v2": "V2回答：什么是限流？（语气：幽默）", "v1_version": 1, "v2_version": 2}
+[PASS] 10 对话中引用模板版本                    {"template": {"name": "verify_demo", "version": 2, "rendered_chars": 24}, "output_head": "【仿真回复】已收到你的输入：V2回答：网关为什么要做统一抽象？（语气：专业）"}
+[PASS] 11 错误码统一封装                      {"http": 400, "code": "template_render_error", "message": "缺少模板变量：['tone']"}
+[PASS] 12 Token与延迟可观测                  {"tokens_by_category": {"input_tokens": 622, "output_tokens": 436, "total_tokens": 1058, "cached_tokens": 65, "reasoning_tokens": 65}, "deepseek-v4-pro.first_to
+[PASS] 13a 指数退避重试后成功                    {"attempts": 3, "http": 200, "output_head": "【仿真回复】已收到你的输入：重试测试"}
+[PASS] 13b 重试耗尽后统一报错                    {"http": 502, "code": "upstream_error", "attempts": 3}
+[PASS] 14 模型级限流返回429                   {"status_codes": [200, 200, 429, 429], "rate_limited_total": 2, "bucket": {"capacity": 2, "rate_per_min": 6.0, "available_tokens": 0.0}}
+[PASS] 15 未知模型统一404                    {"http": 404, "code": "model_not_found"}
+
+=== 结果：17/17 通过 ===
+脱敏证据：evidence/verify_report.json
+验收脚本退出码：0
+
+--- [6/6] 回写证据到仓库 evidence/ ---
+证据文件：/data/workspace/llm-gateway/evidence/verify_report.json
+结果：17/17 通过 | 模式：sim | 脱敏：True
+检查项：00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13a, 13b, 14, 15
+
+仓库根目录：/data/workspace/llm-gateway
+必需文件：27/27
+app/ 下 Python 源码：16 个
+
+[PASS] 文件树完整，远端包含实际源码。
+
+=== PREFLIGHT PASS：干净环境安装/启动/双协议验证全部通过 ===

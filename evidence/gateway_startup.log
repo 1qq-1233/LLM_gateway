@@ -1,0 +1,59 @@
+[run.sh] 未找到 .env，使用默认配置（真实 API 调用需 cp .env.example .env 并填 Key）
+INFO:     Started server process [1968]
+INFO:     Waiting for application startup.
+2026-11-11 10:41:28,312 INFO gateway.api | 已加载模型：[('deepseek-v4-pro', 'openai_responses'), ('deepseek-v4-flash', 'anthropic_messages')]
+2026-11-11 10:41:28,312 WARNING gateway.api | 模型 deepseek-v4-pro 未配置 API Key（MODEL_A_*_API_KEY 为空），调用将直接报配置错误
+2026-11-11 10:41:28,312 WARNING gateway.api | 模型 deepseek-v4-flash 未配置 API Key（MODEL_B_*_API_KEY 为空），调用将直接报配置错误
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8123 (Press CTRL+C to quit)
+INFO:     127.0.0.1:46540 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46550 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "GET /healthz HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "GET /v1/models HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /admin/models/deepseek-v4-pro/upstream?base_url=http%3A%2F%2F127.0.0.1%3A8102%2Fopenai%2Fv1&upstream_model=sim-openai HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /admin/models/deepseek-v4-flash/upstream?base_url=http%3A%2F%2F127.0.0.1%3A8102%2Fanthropic&upstream_model=sim-anthropic HTTP/1.1" 200 OK
+2026-11-11 10:41:31,387 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 200 OK
+2026-11-11 10:41:31,393 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/anthropic/v1/messages "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 200 OK
+2026-11-11 10:41:31,408 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 200 OK
+2026-11-11 10:41:31,720 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/anthropic/v1/messages "HTTP/1.1 200 OK"
+2026-11-11 10:41:32,032 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 200 OK
+2026-11-11 10:41:32,040 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/anthropic/v1/messages "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "DELETE /v1/templates/verify_demo HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:46564 - "POST /v1/templates HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /v1/templates/verify_demo/versions HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "GET /v1/templates/verify_demo HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /v1/templates/verify_demo/render HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /v1/templates/verify_demo/render HTTP/1.1" 200 OK
+2026-11-11 10:41:32,059 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:46564 - "GET /v1/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /admin/models/deepseek-v4-pro/upstream?base_url=http%3A%2F%2F127.0.0.1%3A8102%2Fopenai%2Fv1&upstream_model=sim-openai HTTP/1.1" 200 OK
+2026-11-11 10:41:32,151 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 500 Internal Server Error"
+2026-11-11 10:41:32,152 WARNING gateway.retry | openai_responses 第 1 次失败(upstream_error)，0.58s 后退避重试
+2026-11-11 10:41:32,740 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 500 Internal Server Error"
+2026-11-11 10:41:32,740 WARNING gateway.retry | openai_responses 第 2 次失败(upstream_error)，1.05s 后退避重试
+2026-11-11 10:41:33,797 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 200 OK
+2026-11-11 10:41:33,830 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 500 Internal Server Error"
+2026-11-11 10:41:33,831 WARNING gateway.retry | openai_responses 第 1 次失败(upstream_error)，0.57s 后退避重试
+2026-11-11 10:41:34,405 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 500 Internal Server Error"
+2026-11-11 10:41:34,406 WARNING gateway.retry | openai_responses 第 2 次失败(upstream_error)，1.08s 后退避重试
+2026-11-11 10:41:35,492 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 500 Internal Server Error"
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 502 Bad Gateway
+INFO:     127.0.0.1:46564 - "POST /admin/ratelimit/deepseek-v4-pro?rpm=6&burst=2 HTTP/1.1" 200 OK
+2026-11-11 10:41:35,525 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 200 OK
+2026-11-11 10:41:35,531 INFO httpx | HTTP Request: POST http://127.0.0.1:8102/openai/v1/responses "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 429 Too Many Requests
+INFO:     127.0.0.1:46564 - "GET /v1/metrics HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /admin/ratelimit/deepseek-v4-pro?rpm=60&burst=10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:46564 - "POST /v1/chat HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:46564 - "DELETE /v1/templates/verify_demo HTTP/1.1" 200 OK

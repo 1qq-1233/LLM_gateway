@@ -1,0 +1,9 @@
+# 运行时产物（不提交）
+__pycache__/
+*.pyc
+.venv/
+.env
+logs/
+
+# evidence/ 是刻意保留的验收证据，必须提交，请勿加入忽略规则
+# 如需重置本地证据：rm -rf evidence && bash scripts/preflight.sh

@@ -1,0 +1,28 @@
+{
+  "name": "summarize",
+  "description": "文本摘要模板（示例：v1 一句话，v2 三要点 + 情绪）",
+  "latest": 2,
+  "versions": [
+    {
+      "version": 1,
+      "system": "你是一个简洁的中文摘要助手。",
+      "content": "请用一句话概括以下内容：\n{{text}}",
+      "variables": [
+        "text"
+      ],
+      "created_at": "2026-11-01 00:00:00",
+      "changelog": "初版：一句话摘要"
+    },
+    {
+      "version": 2,
+      "system": "你是资深内容分析助手，输出结构化中文摘要。",
+      "content": "请对以下内容做摘要：\n{{text}}\n\n要求：\n1. 三个要点\n2. 一句话总体评价\n3. 标注情绪倾向：{{tone}}",
+      "variables": [
+        "text",
+        "tone"
+      ],
+      "created_at": "2026-11-01 00:00:00",
+      "changelog": "v2：三要点 + 情绪标注"
+    }
+  ]
+}
